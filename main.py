@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
+from scipy.stats import binned_statistic
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.preprocessing import MinMaxScaler
 
@@ -85,17 +86,48 @@ if __name__ == '__main__':
     plt.plot(y_true, y_true)
     plt.legend()
 
+    plt.twinx()
+    statistics, bin_edges, _ = binned_statistic(y_true, residual, 'std')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_std', color='red')
+    plt.legend()
+
     plt.subplot(2, 5, 7, title='residuals')
     plt.hist(residual, bins=100)
 
     plt.subplot(2, 5, 8, title='x1 vs residual')
     plt.plot(x1[:-n_anomaly], residual[:-n_anomaly], '.', alpha=0.5)
     plt.plot(x1[-n_anomaly:], residual[-n_anomaly:], '.', alpha=0.5, label='anomaly')
+    statistics, bin_edges, _ = binned_statistic(x1, residual, 'mean')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_mean')
+    plt.legend()
+
+    plt.twinx()
+    statistics, bin_edges, _ = binned_statistic(x1, residual, 'std')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_std', color='red')
     plt.legend()
 
     plt.subplot(2, 5, 9, title='x2 vs residual')
     plt.plot(x2[:-n_anomaly], residual[:-n_anomaly], '.', alpha=0.5)
     plt.plot(x2[-n_anomaly:], residual[-n_anomaly:], '.', alpha=0.5, label='anomaly')
+    statistics, bin_edges, _ = binned_statistic(x2, residual, 'mean')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_mean')
+    plt.legend()
+
+    plt.twinx()
+    statistics, bin_edges, _ = binned_statistic(x2, residual, 'std')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_std', color='red')
+    plt.legend()
+    
+    plt.subplot(2, 5, 10, title='z vs residual')
+    plt.plot(z[:-n_anomaly], residual[:-n_anomaly], '.', alpha=0.5)
+    plt.plot(z[-n_anomaly:], residual[-n_anomaly:], '.', alpha=0.5, label='anomaly')
+    statistics, bin_edges, _ = binned_statistic(z, residual, 'mean')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_mean')
+    plt.legend()
+
+    plt.twinx()
+    statistics, bin_edges, _ = binned_statistic(z, residual, 'std')
+    plt.plot([np.mean(val) for val in zip(bin_edges[:-1], bin_edges[1:])], statistics, label='binned_std', color='red')
     plt.legend()
 
     plt.tight_layout()
